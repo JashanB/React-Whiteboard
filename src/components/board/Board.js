@@ -1,6 +1,8 @@
-import React, { useRef, useEffect } from 'react';
-import io from 'socket.io-client';
+import React, { useRef, useEffect, useState } from 'react';
+// import io from 'socket.io-client';
+import socketIOClient from "socket.io-client";
 import './Board.css';
+const ENDPOINT = "http://127.0.0.1:4001";
 
 export default function Board () {
   const canvasRef = useRef(null);
@@ -51,7 +53,7 @@ export default function Board () {
       const w = canvas.width;
       const h = canvas.height;
 
-      socketRef.current.emit('drawing', {
+      socket.emit('drawing', {
         x0: x0 / w,
         y0: y0 / h,
         x1: x1 / w,
@@ -124,9 +126,12 @@ export default function Board () {
       const h = canvas.height;
       drawLine(data.x0 * w, data.y0 * h, data.x1 * w, data.y1 * h, data.color);
     }
-
-    socketRef.current = io.connect('/');
-    socketRef.current.on('drawing', onDrawingEvent);
+    const socket = socketIOClient(ENDPOINT);
+    // socketRef.current = io.connect('/');
+    socket.on("drawing", data => {
+      onDrawingEvent(data);
+    });
+    // socketRef.current.on('drawing', onDrawingEvent);
   }, []);
 
   // ------------- The Canvas and color elements --------------------------

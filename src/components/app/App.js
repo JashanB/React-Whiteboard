@@ -1,4 +1,5 @@
 import './App.css';
+import Board from '../board';
 
 function App() {
   //home page with create "room" button
@@ -8,6 +9,7 @@ function App() {
   //features: clear all, increase size of pen, z
   return (
     <div className="App">
+      <Board />
     </div>
   );
 }
